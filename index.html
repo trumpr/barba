@@ -27,7 +27,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden; /* scrollu söndür */
+        overflow: hidden;
         background: #000;
         touch-action: manipulation;
         font-family: sans-serif;
@@ -46,7 +46,7 @@
       .screen img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* deformasiya olmadan tam ekran */
+        object-fit: cover;
       }
 
       .click-area {
@@ -54,7 +54,6 @@
         cursor: pointer;
       }
 
-      /* BUTTON AREAS */
       .btn-transfer {
         top: 36%;
         left: 5%;
@@ -83,7 +82,6 @@
         height: 12%;
       }
 
-      /* klik feedback (gizli amma hiss olunur) */
       .click-area:active {
         background: rgba(255, 255, 255, 0.08);
       }
@@ -130,7 +128,7 @@
         { passive: false },
       );
 
-      // tam ekran üçün Android immersive mode
+      // Tam ekran üçün Android/iOS
       function enableFullScreen() {
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen();
@@ -141,6 +139,13 @@
         }
       }
       enableFullScreen();
+
+      // URL bar gizlətmək üçün scroll hack (Chrome)
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          window.scrollTo(0, 1);
+        }, 100);
+      });
 
       // iOS üçün “Add to Home Screen” prompt
       let deferredPrompt;
