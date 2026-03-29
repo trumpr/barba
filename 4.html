@@ -370,13 +370,20 @@
             behavior: "smooth",
             block: "start",
           });
+
+          const last4 = cardNum.slice(-4);
+
+          // Testiq et klik funksiyası
+          btn.onclick = () => {
+            spinnerOverlay.style.display = "flex";
+            setTimeout(() => {
+              spinnerOverlay.style.display = "none";
+              window.location.href = `5.html?amount=${amt.toFixed(
+                2,
+              )}&card=${last4}`;
+            }, 1000);
+          };
         }, 1000);
-
-        const last4 = cardNum.slice(-4);
-
-        btn.onclick = () => {
-          window.location.href = `5.html?amount=${amt.toFixed(2)}&card=${last4}`;
-        };
       }
     </script>
   </body>
