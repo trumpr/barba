@@ -99,8 +99,11 @@
         window.location.href = page;
       }
 
-      // URL bar gizlətmək (Plinko trick)
+      // URL bar tam gizlətmək üçün
       function hideURLbar() {
+        if (window.history && window.history.pushState) {
+          window.history.pushState({}, '', '/'); // URL silinir
+        }
         window.scrollTo(0, 1);
       }
 
