@@ -86,15 +86,14 @@
         background: rgba(255, 255, 255, 0.08);
       }
 
-      /* ✅ BALANS ÜÇÜN (yalnız font ölçüsünü adaptiv etdim, mövqe eyni) */
+      /* ✅ BALANS ÜÇÜN (yalnız əlavə olundu) */
       #balance {
         position: absolute;
         top: 54.5%;
         left: 24.5%;
         color: rgb(35, 34, 34);
-        font-size: 4vw; /* ekran ölçüsünə uyğun font */
+        font-size: 18px;
         font-weight: bold;
-        white-space: nowrap; /* balans sətirdə qalsın */
       }
     </style>
   </head>
@@ -156,14 +155,13 @@
         }, 100);
       });
 
-      /* ✅ BALANS SİSTEMİ */
+      /* ✅ BALANS SİSTEMİ (yalnız əlavə olundu) */
       let balance = localStorage.getItem("balance")
         ? parseFloat(localStorage.getItem("balance"))
         : 2800;
 
       function updateBalance() {
-        document.getElementById("balance").innerText =
-          balance.toLocaleString("az-AZ") + " ₼";
+        document.getElementById("balance").innerText = balance + " ₼";
         localStorage.setItem("balance", balance);
       }
 
