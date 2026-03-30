@@ -4,11 +4,17 @@
     <meta charset="UTF-8" />
 
     <!-- FULLSCREEN META -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json" />
@@ -16,7 +22,8 @@
     <title>Bank App</title>
 
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         height: 100%;
@@ -78,6 +85,17 @@
       .click-area:active {
         background: rgba(255, 255, 255, 0.08);
       }
+
+      /* ✅ BALANS ÜÇÜN (yalnız font ölçüsünü adaptiv etdim, mövqe eyni) */
+      #balance {
+        position: absolute;
+        top: 54.5%;
+        left: 24.5%;
+        color: rgb(35, 34, 34);
+        font-size: 4vw; /* ekran ölçüsünə uyğun font */
+        font-weight: bold;
+        white-space: nowrap; /* balans sətirdə qalsın */
+      }
     </style>
   </head>
 
@@ -85,10 +103,29 @@
     <div class="screen">
       <img src="bank.png" alt="Bank App" />
 
-      <div class="click-area btn-transfer" onclick="goPage('2.html')" aria-label="Transfer"></div>
-      <div class="click-area btn-payment" onclick="goPage('payment.html')" aria-label="Payment"></div>
-      <div class="click-area btn-history" onclick="goPage('history.html')" aria-label="History"></div>
-      <div class="click-area card-area" onclick="goPage('2.html')" aria-label="Card"></div>
+      <!-- ✅ BALANS -->
+      <div id="balance">2 800 ₼</div>
+
+      <div
+        class="click-area btn-transfer"
+        onclick="goPage('2.html')"
+        aria-label="Transfer"
+      ></div>
+      <div
+        class="click-area btn-payment"
+        onclick="goPage('payment.html')"
+        aria-label="Payment"
+      ></div>
+      <div
+        class="click-area btn-history"
+        onclick="goPage('history.html')"
+        aria-label="History"
+      ></div>
+      <div
+        class="click-area card-area"
+        onclick="goPage('2.html')"
+        aria-label="Card"
+      ></div>
     </div>
 
     <script>
@@ -97,9 +134,13 @@
       }
 
       // swipe disable (app kimi hiss)
-      document.addEventListener("touchmove", function(e) {
-        e.preventDefault();
-      }, { passive: false });
+      document.addEventListener(
+        "touchmove",
+        function (e) {
+          e.preventDefault();
+        },
+        { passive: false },
+      );
 
       // iOS / Android “Add to Home Screen” prompt
       let deferredPrompt;
@@ -109,9 +150,24 @@
       });
 
       // Qismən fullscreen (browser-də)
-      window.addEventListener('load', () => {
-        setTimeout(() => { window.scrollTo(0,1); }, 100);
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          window.scrollTo(0, 1);
+        }, 100);
       });
+
+      /* ✅ BALANS SİSTEMİ */
+      let balance = localStorage.getItem("balance")
+        ? parseFloat(localStorage.getItem("balance"))
+        : 2800;
+
+      function updateBalance() {
+        document.getElementById("balance").innerText =
+          balance.toLocaleString("az-AZ") + " ₼";
+        localStorage.setItem("balance", balance);
+      }
+
+      updateBalance();
     </script>
   </body>
 </html>
